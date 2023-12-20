@@ -1,9 +1,10 @@
 from scapy.all import sniff, IP, TCP, UDP
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Sniffer:
-    def __init__(self):
+    def __init__(self, flow_timeout=0.6):  # Set default flow timeout to 600 milliseconds
         self.start_time = None
+        self.flow_timeout = timedelta(seconds=flow_timeout)
         self.flow_data = {
             "duration": 0,
             "protocol": "",
@@ -34,12 +35,17 @@ class Sniffer:
             if self.start_time is None:
                 self.start_time = datetime.now()
 
+            # Check for flow timeout
+            if datetime.now() - self.start_time > self.flow_timeout:
+                self.end_flow()
+                return
+
             # Update flow information based on the direction
             if direction == "forward":
                 self.flow_data["forward_packets"] += 1
                 self.flow_data["forward_size"] += len(packet)
 
-    def sniff_traffic(self, interface="eth0", count=0):
+    def sniff_traffic(self, interface="Ethernet", count=0):
         # Sniff network traffic and call the packet_callback function for each captured packet
         sniff(prn=self.packet_callback, store=0, iface=interface, count=count)
 
@@ -62,20 +68,20 @@ class Sniffer:
         else:
             self.flow_data["avg_size_forward"] = 0
 
-    def get_flow_data(self):
-        # Calculate average size before returning the flow data
+    def end_flow(self):
+        # Called when the flow timeout is reached
+        self.calculate_duration()
         self.calculate_average_size()
-        return self.flow_data
+        print("Flow ended due to timeout.")
+        print(f"Flow Duration: {self.flow_data['duration']} seconds")
+        print(f"Protocol: {self.flow_data['protocol']}")
+        print(f"Destination Port: {self.flow_data['dest_port']}")
+        print(f"Total Packets (Forward): {self.flow_data['forward_packets']}")
+        print(f"Total Packets (Backward): {self.flow_data['backward_packets']}")
+        print(f"Total Size (Forward): {self.flow_data['forward_size']} bytes")
+        print(f"Average Size (Forward): {self.flow_data['avg_size_forward']} bytes")
+        exit()
 
 # Example usage:
 sniffer = Sniffer()
 sniffer.sniff_traffic()
-flow_data = sniffer.get_flow_data()
-
-print(f"Flow Duration: {flow_data['duration']} seconds")
-print(f"Protocol: {flow_data['protocol']}")
-print(f"Destination Port: {flow_data['dest_port']}")
-print(f"Total Packets (Forward): {flow_data['forward_packets']}")
-print(f"Total Packets (Backward): {flow_data['backward_packets']}")
-print(f"Total Size (Forward): {flow_data['forward_size']} bytes")
-print(f"Average Size (Forward): {flow_data['avg_size_forward']} bytes")
