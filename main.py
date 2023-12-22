@@ -1,7 +1,3 @@
-from random import random
-from time import sleep
-from threading import Thread, Event
-
 from scapy.sendrecv import sniff
 
 from flow.Flow import Flow
