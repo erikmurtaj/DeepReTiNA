@@ -7,73 +7,11 @@ from scapy.sendrecv import sniff
 from flow.Flow import Flow
 from flow.PacketInfo import PacketInfo
 
-from tensorflow import keras
-
 import numpy as np
 import pickle
-import csv 
 import traceback
 
-import json
 import pandas as pd
-
-cols = ['FlowID',
-'FlowDuration',
-'BwdPacketLenMax',
-'BwdPacketLenMin',
-'BwdPacketLenMean',
-'BwdPacketLenStd',
-'FlowIATMean',
-'FlowIATStd',
-'FlowIATMax',
-'FlowIATMin',
-'FwdIATTotal',
-'FwdIATMean',
-'FwdIATStd',
-'FwdIATMax',
-'FwdIATMin',
-'BwdIATTotal',
-'BwdIATMean',
-'BwdIATStd',
-'BwdIATMax',
-'BwdIATMin',
-'FwdPSHFlags',
-'FwdPackets_s',
-'MaxPacketLen',
-'PacketLenMean',
-'PacketLenStd',
-'PacketLenVar',
-'FINFlagCount',
-'SYNFlagCount',
-'PSHFlagCount',
-'ACKFlagCount',
-'URGFlagCount',
-'AvgPacketSize',
-'AvgBwdSegmentSize',
-'InitWinBytesFwd',
-'InitWinBytesBwd',
-'ActiveMin',
-'IdleMean',
-'IdleStd',
-'IdleMax',
-'IdleMin',
-'Src',
-'SrcPort',
-'Dest',
-'DestPort',
-'Protocol',
-'FlowStartTime',
-'FlowLastSeen',
-'PName',
-'PID',
-'Classification',
-'Probability',
-'Risk']
-
-flow_count = 0
-flow_df = pd.DataFrame(columns =cols)
-
-src_ip_dict = {}
 
 current_flows = {}
 FlowTimeout = 600
@@ -144,7 +82,6 @@ def newPacket(p):
                 flow.new(packet, 'bwd')
                 current_flows[packet.getBwdID()] = flow
         else:
-
             flow = Flow(packet)
             current_flows[packet.getFwdID()] = flow
             # current flows put id, (new) flow
@@ -167,8 +104,7 @@ with open('model.pkl', 'rb') as f:
     classifier = pickle.load(f)
 
 while 1:
-    print("Begin Sniffing".center(20, ' '))
-    # sniff(iface="en0", prn=newPacket)
+    print("BEGIN SNIFFING...".center(20, ' '))
     sniff(prn=newPacket)
     for f in current_flows.values():
         classify(f.terminated())
