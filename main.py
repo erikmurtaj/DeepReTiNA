@@ -4,13 +4,15 @@ from flow.Flow import Flow
 from flow.PacketInfo import PacketInfo
 
 import numpy as np
-import pickle
+import joblib
 import traceback
 
 import pandas as pd
 
+from sklearn.preprocessing import MinMaxScaler
+
 current_flows = {}
-FlowTimeout = 600
+FlowTimeout = 6000
 
 def newPacket(p):
     try:
@@ -93,11 +95,12 @@ def classify(features):
     #print(features)
     feature_string = [str(i) for i in features[39:]]
     features = [np.nan if x in [np.inf, -np.inf] else float(x) for x in features[:39]]
-    result = classifier.predict([features])
-    print("FROM: " + feature_string[0] + " TO " + feature_string[2] + " ===> " + result)
+    result = model.predict([features])
 
-with open('model.pkl', 'rb') as f:
-    classifier = pickle.load(f)
+    x = "Normal" if result == 0 else "ATTACK"
+    print("FROM: " + feature_string[0] + " TO " + feature_string[2] + " ===> " + x)
+
+model = joblib.load('random_forest_model_dos.joblib')
 
 while 1:
     print("BEGIN SNIFFING...".center(20, ' '))
