@@ -78,7 +78,15 @@
 			<artifactId>tika-core</artifactId>
 			<version>1.17</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.pmml4s/pmml4s -->
+		<dependency>
+		    <groupId>org.pmml4s</groupId>
+		    <artifactId>pmml4s_3</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
 
+		
 
 	</dependencies>
 	
