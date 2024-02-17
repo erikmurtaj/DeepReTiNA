@@ -1,11 +1,22 @@
 package cic.cs.unb.ca.jnetpcap;
 
 import java.util.Arrays;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.dmg.pmml.PMML;
 import org.jnetpcap.packet.format.FormatUtils;
+import org.jpmml.evaluator.FieldValue;
+import org.jpmml.evaluator.ModelEvaluator;
+import org.jpmml.evaluator.ModelEvaluatorBuilder;
+
+import org.pmml4s.model.Model;
 
 public class BasicFlow {
 
@@ -1085,7 +1096,37 @@ public class BasicFlow {
 		else{
 			return "BENIGN";
 		}*/
-        return "NeedManualLabel";
+
+		Model model = model = Model.fromFile("models/rf_slowloris_classifier.pmml");
+		
+		
+		Map result = model.predict(new HashMap<String, Object>() {{
+			put("Bwd Pkt Len Max", getBwdPacketLengthMax());
+			put("Bwd Seg Size Avg", bAvgSegmentSize());
+			put("Bwd Pkt Len Mean", getBwdPacketLengthMean());
+			put("Flow IAT Std", getFlowIAT().getStandardDeviation());
+			put("Flow IAT Mean", getFlowIAT().getMean());
+			put("Flow IAT Max", getFlowIAT().getMax());
+			put("Fwd IAT Max", getFlowIAT().getMax());
+			put("Fwd IAT Mean", getFlowIAT().getMean());
+			put("Pkt Len Var", getPacketLengthVariance());
+			put("FIN Flag Cnt", flagCounts.get("FIN").value);
+			put("Pkt Len Max", flowLengthStats.getMax());
+			put("Pkt Len Std", getPacketLengthStd());
+			put("Fwd Pkts/s", getfPktsPerSecond());
+			put("Fwd IAT Min", getFwdIATMin());
+			put("Bwd IAT Tot", getBwdIATTotal());
+			put("Bwd IAT Mean", getBwdIATMean());
+			put("Bwd IAT Std", getBwdIATStd());
+			put("Bwd IAT Max", getBwdIATMax());
+			put("Bwd IAT Min", getBwdIATMin());
+			put("Fwd PSH Flags", getFwdPSHFlags());
+			put("Pkt Len Mean", getPacketLengthMean());
+        }});
+		
+		System.out.println(result.toString());
+		// 
+        return result.toString();
     }
 	
     public String dumpFlowBasedFeaturesEx() {
