@@ -1,0 +1,2407 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.103.1"/>
+		<Timestamp>2024-02-26T19:12:43Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('classifier', RandomForestClassifier(max_depth=16, n_estimators=20))])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="y" optype="categorical" dataType="string">
+			<Value value="BENIGN"/>
+			<Value value="FTP-BruteForce"/>
+			<Value value="SSH-BruteForce"/>
+		</DataField>
+		<DataField name="Total Fwd Packet" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Packet Length Max" optype="continuous" dataType="float"/>
+		<DataField name="Fwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Bwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="Bwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="PSH Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="ACK Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Act Data Pkts" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Seg Size Min" optype="continuous" dataType="float"/>
+	</DataDictionary>
+	<MiningModel functionName="classification" algorithmName="sklearn.ensemble._forest.RandomForestClassifier">
+		<MiningSchema>
+			<MiningField name="y" usageType="target"/>
+			<MiningField name="Fwd Act Data Pkts"/>
+			<MiningField name="Fwd Packet Length Max"/>
+			<MiningField name="PSH Flag Count"/>
+			<MiningField name="Bwd Header Length"/>
+			<MiningField name="Fwd PSH Flags"/>
+			<MiningField name="ACK Flag Count"/>
+			<MiningField name="Bwd PSH Flags"/>
+			<MiningField name="Fwd Seg Size Min"/>
+			<MiningField name="Fwd Header Length"/>
+			<MiningField name="Total Fwd Packet"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(BENIGN)" optype="continuous" dataType="double" feature="probability" value="BENIGN"/>
+			<OutputField name="probability(FTP-BruteForce)" optype="continuous" dataType="double" feature="probability" value="FTP-BruteForce"/>
+			<OutputField name="probability(SSH-BruteForce)" optype="continuous" dataType="double" feature="probability" value="SSH-BruteForce"/>
+		</Output>
+		<LocalTransformations>
+			<DerivedField name="double(Fwd Act Data Pkts)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Act Data Pkts"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Packet Length Max)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Packet Length Max"/>
+			</DerivedField>
+			<DerivedField name="double(PSH Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="PSH Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd PSH Flags"/>
+			</DerivedField>
+			<DerivedField name="double(ACK Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="ACK Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd PSH Flags"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Seg Size Min)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Seg Size Min"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(Total Fwd Packet)" optype="continuous" dataType="double">
+				<FieldRef field="Total Fwd Packet"/>
+			</DerivedField>
+		</LocalTransformations>
+		<Segmentation multipleModelMethod="average" missingPredictionTreatment="returnMissing">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="4997">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="4997"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="5">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="5"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3931">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3931"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="61223">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="61223"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="FTP-BruteForce" recordCount="1">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="11151">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="11151"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1438">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="1438"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="53.0"/>
+							<Node score="BENIGN" recordCount="5">
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="13.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="5"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75446">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75446"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="413">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="413"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BENIGN" recordCount="54180">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="5.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="54180"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+										<Node>
+											<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="1.0"/>
+											<Node score="FTP-BruteForce" recordCount="7">
+												<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="103.5"/>
+												<ScoreDistribution value="BENIGN" recordCount="0"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+											<Node score="BENIGN" recordCount="1">
+												<True/>
+												<ScoreDistribution value="BENIGN" recordCount="1"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node score="BENIGN" recordCount="23">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="23"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="23">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="23"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="4168">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="4168"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="28.5"/>
+								<Node score="BENIGN" recordCount="77">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="14.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="77"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3908">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3908"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="20652">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="20652"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="439">
+							<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="455.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="439"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75132">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75132"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="17.0"/>
+									<Node score="BENIGN" recordCount="4588">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="4588"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="7">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="61640">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="61640"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="156.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="234.0"/>
+									<Node score="BENIGN" recordCount="4">
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="5.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="4"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="3954">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="9.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3954"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="1">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="77">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="77"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="11840">
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="11840"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="FTP-BruteForce" recordCount="13">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="48.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="13"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="846">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="846"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="456">
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="10.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="456"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75184">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75184"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="678.0"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="54236">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="54236"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+										<Node score="FTP-BruteForce" recordCount="7">
+											<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="BENIGN" recordCount="1">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="1"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="48">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="48"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="8375">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="8375"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+									<Node score="FTP-BruteForce" recordCount="3895">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="238.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3895"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="13">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="13"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="772">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="772"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="646.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BENIGN" recordCount="1187">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="570.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="1187"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="10">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="305.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="10"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="70">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="70"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="12453">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="12453"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="184">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="184"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="52">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="52"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="33">
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="13.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="33"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75272">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75272"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="51.5"/>
+							<Node score="BENIGN" recordCount="31">
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="714.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="31"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="2">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="2"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1969">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="1969"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="17.0"/>
+									<Node score="BENIGN" recordCount="4516">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="4516"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="5">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="5"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="61353">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="61353"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+								<Node>
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="9.0"/>
+									<Node score="BENIGN" recordCount="6">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="6"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="3961">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3961"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="57">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="57"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="95">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="16.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="95"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="4">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12799">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12799"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="419">
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="11.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="419"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75395">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75395"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="646.0"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node score="BENIGN" recordCount="54009">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="54009"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="23.0"/>
+									<Node>
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="14.5"/>
+										<Node score="BENIGN" recordCount="16">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="16"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="FTP-BruteForce" recordCount="4">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="4"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="1">
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="34">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="34"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="12451">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="12451"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+								<Node>
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="9.0"/>
+									<Node score="BENIGN" recordCount="12">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="12"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="4064">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="4064"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="71">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="71"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="9735">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="45.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="9735"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node score="FTP-BruteForce" recordCount="4">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="267.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="137">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="137"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="1378">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="1378"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1366">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="1366"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75328">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75328"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="19.5"/>
+								<Node score="BENIGN" recordCount="4993">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="4993"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="77">
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="77"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3930">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3930"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="4">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="116.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="4"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="1">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="73582">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="73582"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node score="BENIGN" recordCount="70">
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="70"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75228">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="794.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75228"/>
+							</Node>
+							<Node score="BENIGN" recordCount="8">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="8"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="717">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="717"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="678.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="5034">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="5034"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="6">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="158.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="6"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3961">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3961"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="72322">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="72322"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="38">
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="648.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="38"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="57">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="57"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="2067">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="2067"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75125">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75125"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node>
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.5"/>
+									<Node score="BENIGN" recordCount="4609">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="7.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="4609"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="6">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="6"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="5">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="5"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="79">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="79"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3888">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3888"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="57032">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="57032"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="FTP-BruteForce" recordCount="1">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="16881">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="16881"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="458">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="21.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="458"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75651">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75651"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BENIGN" recordCount="54562">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="5.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="54562"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.5"/>
+									<Node score="FTP-BruteForce" recordCount="10">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="29.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="10"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="1468">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1468"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="2689">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="2689"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<Node score="BENIGN" recordCount="61">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="61"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="4007">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4007"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="19801">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="19801"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="28.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="628.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="FTP-BruteForce" recordCount="12">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="54.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="12"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="8">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="8"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="110">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="110"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75053">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75053"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="29.5"/>
+							<Node score="SSH-BruteForce" recordCount="2">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="56.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="2"/>
+							</Node>
+							<Node score="BENIGN" recordCount="4">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="4"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="823">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="823"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="150.0"/>
+								<Node score="BENIGN" recordCount="52760">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="52760"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+									<Node score="BENIGN" recordCount="22">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="22"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="3">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="114">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="114"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="228.0"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="16.0"/>
+										<Node score="BENIGN" recordCount="5">
+											<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="5"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="FTP-BruteForce" recordCount="2">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="2"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="1235">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1235"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="4027">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="81.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4027"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="13">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="13"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="137">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="16.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="137"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="5">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="5"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="24636">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="24636"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="994.5"/>
+								<Node score="SSH-BruteForce" recordCount="75221">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="984.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="75221"/>
+								</Node>
+								<Node score="BENIGN" recordCount="6">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="6"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="14">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="14"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="410">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="410"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+									<Node score="BENIGN" recordCount="63221">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="63221"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+										<Node score="BENIGN" recordCount="42">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="42"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="FTP-BruteForce" recordCount="5">
+											<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="5"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="BENIGN" recordCount="6">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="6"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="1789">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1789"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+										<Node score="FTP-BruteForce" recordCount="10">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="8.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="10"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="BENIGN" recordCount="25">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="25"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="43">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="43"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1186">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1186"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="156.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BENIGN" recordCount="5">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="5"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="3989">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3989"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="67">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="67"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="82">
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="13.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="82"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="13">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="13"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12334">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12334"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node score="BENIGN" recordCount="16">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="16"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75371">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75371"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="406">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="406"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+								<Node score="BENIGN" recordCount="52371">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="52371"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="FTP-BruteForce" recordCount="7">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="4">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="4"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="106">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="106"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+										<Node>
+											<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="148.5"/>
+											<Node score="BENIGN" recordCount="6">
+												<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.0"/>
+												<ScoreDistribution value="BENIGN" recordCount="6"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+											<Node score="FTP-BruteForce" recordCount="4008">
+												<True/>
+												<ScoreDistribution value="BENIGN" recordCount="0"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="4008"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node score="BENIGN" recordCount="16">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="16"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="146">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="146"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="30.5"/>
+									<Node score="BENIGN" recordCount="165">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="37.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="165"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="11">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="11"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1627">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1627"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="24690">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="24690"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="28.5"/>
+							<Node score="BENIGN" recordCount="22">
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="610.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="22"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75011">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75011"/>
+							</Node>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="3">
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="57.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="3"/>
+						</Node>
+						<Node score="BENIGN" recordCount="417">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="417"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="5044">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="5044"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="53">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="10.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="53"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3967">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3967"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="23.5"/>
+								<Node score="BENIGN" recordCount="676">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="8.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="676"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="1">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="72912">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="72912"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node score="BENIGN" recordCount="81">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="81"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75115">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75115"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="761">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="761"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="19.5"/>
+								<Node score="BENIGN" recordCount="4997">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="4997"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="58">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="58"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="4097">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4097"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="57419">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="57419"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="FTP-BruteForce" recordCount="3">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="3"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="15913">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="15913"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node score="BENIGN" recordCount="282">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="282"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75289">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75289"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="552">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="552"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+									<Node score="BENIGN" recordCount="54027">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="54027"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="8263">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="8263"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+										<Node>
+											<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+											<Node score="FTP-BruteForce" recordCount="2">
+												<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="666.5"/>
+												<ScoreDistribution value="BENIGN" recordCount="0"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="2"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+											<Node score="BENIGN" recordCount="2">
+												<True/>
+												<ScoreDistribution value="BENIGN" recordCount="2"/>
+												<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+												<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node score="BENIGN" recordCount="13">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="13"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="289">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="289"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+									<Node>
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="8.0"/>
+										<Node score="FTP-BruteForce" recordCount="4">
+											<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="1.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="4"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="BENIGN" recordCount="2">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="2"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="60">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="60"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="148">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="148"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="156.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+									<Node score="BENIGN" recordCount="5">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="5"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="3966">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3966"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="40">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="40"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="15591">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="15591"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="918.0"/>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+								<Node score="BENIGN" recordCount="24">
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="24"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="SSH-BruteForce" recordCount="75237">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="75237"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="32.5"/>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="21.5"/>
+									<Node score="FTP-BruteForce" recordCount="8">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="606.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="8"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="1">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="37">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="37"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="251">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="251"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="639">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="639"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="1">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="1"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.5"/>
+									<Node score="BENIGN" recordCount="5587">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="5587"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="7">
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="62">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="62"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="60751">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="60751"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+								<Node>
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="9.0"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="4.0"/>
+										<Node score="BENIGN" recordCount="2">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="2"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="FTP-BruteForce" recordCount="3901">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="3901"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="5">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="5"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="67">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="67"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="85">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="16.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="85"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="11">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="11"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12163">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12163"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="51.5"/>
+							<Node score="BENIGN" recordCount="6">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="6"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75523">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75523"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="440">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="440"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="61726">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="61726"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+									<Node score="BENIGN" recordCount="199">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="5.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="199"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="7">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="7"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="57">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="57"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="282">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="282"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+									<Node score="FTP-BruteForce" recordCount="3947">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="238.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="3947"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="6">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="6"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="106.5"/>
+										<Node score="BENIGN" recordCount="51">
+											<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="13.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="51"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+										<Node score="FTP-BruteForce" recordCount="12">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="FTP-BruteForce" recordCount="12"/>
+											<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="1405">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1405"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="30">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="30"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="14613">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="14613"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="105">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="634.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="105"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75459">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75459"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="51.5"/>
+							<Node score="BENIGN" recordCount="8">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="8"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="3">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="3"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="700">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="700"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="226.0"/>
+									<Node score="BENIGN" recordCount="4839">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="4839"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="FTP-BruteForce" recordCount="5">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="8.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="5"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="26">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="26"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="75">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="75"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="43">
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="3.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="43"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="4027">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="4027"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="44011">
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="130.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="44011"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="FTP-BruteForce" recordCount="1">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="1"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="28666">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="28666"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="16.5"/>
+							<Node score="BENIGN" recordCount="251">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="638.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="251"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="176">
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="176"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="51.5"/>
+								<Node score="BENIGN" recordCount="1">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="600.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="1"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="SSH-BruteForce" recordCount="75062">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="75062"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="9">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="9"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1418">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="1418"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="5197">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="5197"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="10">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="10"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+								<Node score="FTP-BruteForce" recordCount="3982">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="3982"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="60390">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="60390"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="214.0"/>
+									<Node score="FTP-BruteForce" recordCount="2">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="82.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="2"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="9">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="9"/>
+										<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+										<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="87">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="87"/>
+									<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+									<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12885">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12885"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<Node score="FTP-BruteForce" recordCount="13">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="25.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="13"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="BENIGN" recordCount="911">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="911"/>
+								<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75124">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="FTP-BruteForce" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75124"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

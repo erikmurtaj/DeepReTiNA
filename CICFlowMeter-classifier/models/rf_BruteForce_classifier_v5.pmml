@@ -1,0 +1,2131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.103.1"/>
+		<Timestamp>2024-02-26T19:34:34Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('classifier', RandomForestClassifier(max_depth=16, n_estimators=20))])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="y" optype="categorical" dataType="string">
+			<Value value="BENIGN"/>
+			<Value value="BruteForce Attack"/>
+		</DataField>
+		<DataField name="Total Fwd Packet" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Packet Length Max" optype="continuous" dataType="float"/>
+		<DataField name="Fwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Bwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="Bwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="PSH Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="ACK Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Act Data Pkts" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Seg Size Min" optype="continuous" dataType="float"/>
+	</DataDictionary>
+	<MiningModel functionName="classification" algorithmName="sklearn.ensemble._forest.RandomForestClassifier">
+		<MiningSchema>
+			<MiningField name="y" usageType="target"/>
+			<MiningField name="Fwd Seg Size Min"/>
+			<MiningField name="Fwd Packet Length Max"/>
+			<MiningField name="Bwd Header Length"/>
+			<MiningField name="ACK Flag Count"/>
+			<MiningField name="Fwd PSH Flags"/>
+			<MiningField name="Fwd Header Length"/>
+			<MiningField name="PSH Flag Count"/>
+			<MiningField name="Total Fwd Packet"/>
+			<MiningField name="Fwd Act Data Pkts"/>
+			<MiningField name="Bwd PSH Flags"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(BENIGN)" optype="continuous" dataType="double" feature="probability" value="BENIGN"/>
+			<OutputField name="probability(BruteForce Attack)" optype="continuous" dataType="double" feature="probability" value="BruteForce Attack"/>
+		</Output>
+		<LocalTransformations>
+			<DerivedField name="double(Fwd Seg Size Min)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Seg Size Min"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Packet Length Max)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Packet Length Max"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(ACK Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="ACK Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd PSH Flags"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(PSH Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="PSH Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(Total Fwd Packet)" optype="continuous" dataType="double">
+				<FieldRef field="Total Fwd Packet"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Act Data Pkts)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Act Data Pkts"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd PSH Flags"/>
+			</DerivedField>
+		</LocalTransformations>
+		<Segmentation multipleModelMethod="average" missingPredictionTreatment="returnMissing">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="4583">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="4583"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="6">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="14.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="6"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="3979">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3979"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="60573">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="60573"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.5"/>
+								<Node score="BruteForce Attack" recordCount="1">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="56.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="1"/>
+								</Node>
+								<Node score="BENIGN" recordCount="15">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="15"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="13745">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="13745"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="453">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="11.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="453"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75255">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75255"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="678.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="146.0"/>
+									<Node score="BENIGN" recordCount="4724">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="128.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="4724"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="107">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="107"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="4">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="4"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="129">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="129"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="1">
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="1"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="3889">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3889"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="23.5"/>
+									<Node score="BENIGN" recordCount="655">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="84.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="655"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="1">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="1"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="71610">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="71610"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="26">
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="11.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="26"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="48">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="48"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="43">
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="22.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="43"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75383">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75383"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1988">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="1988"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="2">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="2"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="61248">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="61248"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+									<Node score="BENIGN" recordCount="66">
+										<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="10.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="66"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="10">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="10"/>
+									</Node>
+									<Node score="BENIGN" recordCount="51">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="51"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="366">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="366"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<Node score="BruteForce Attack" recordCount="3984">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="18.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3984"/>
+								</Node>
+								<Node score="BENIGN" recordCount="76">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="508.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="76"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="11">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="11"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="16782">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="16782"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="409">
+							<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="535.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="409"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75607">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75607"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="49170">
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="49170"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="17.5"/>
+									<Node score="BENIGN" recordCount="716">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="716"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="13">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="13"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="12588">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="12588"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="234.0"/>
+								<Node score="BruteForce Attack" recordCount="4057">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="4057"/>
+								</Node>
+								<Node score="BENIGN" recordCount="4413">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="4413"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="88">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="8.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="88"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="7">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="7"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="11826">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="11826"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="28.5"/>
+							<Node score="BENIGN" recordCount="32">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="32"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75296">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75296"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="401">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="401"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="3">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="3"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="48459">
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="130.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="48459"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+									<Node score="BENIGN" recordCount="171">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="171"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="10">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="10"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="13995">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="13995"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BENIGN" recordCount="2">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="146.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="2"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="3984">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3984"/>
+									</Node>
+									<Node score="BENIGN" recordCount="2">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="2"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="60">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="60"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+								<Node score="BENIGN" recordCount="96">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="37.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="96"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="8">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="8"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="16050">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="16050"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="405">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="405"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75368">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75368"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="17.0"/>
+									<Node score="BENIGN" recordCount="5091">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="5091"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="9">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="9"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="57217">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="57217"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+									<Node>
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+										<Node score="BruteForce Attack" recordCount="4010">
+											<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="242.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="4010"/>
+										</Node>
+										<Node score="BENIGN" recordCount="3">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="3"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="24">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="24"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1340">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1340"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="14639">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="14639"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BruteForce Attack" recordCount="75279">
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="17.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75279"/>
+							</Node>
+							<Node score="BENIGN" recordCount="4">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="4"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="29.5"/>
+								<Node score="BENIGN" recordCount="5">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="5"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="1">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="1"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="32">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="32"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="956">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="956"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node score="BENIGN" recordCount="49299">
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="49299"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="154.0"/>
+									<Node>
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="208.0"/>
+										<Node>
+											<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="16.5"/>
+											<Node score="BENIGN" recordCount="602">
+												<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="7.0"/>
+												<ScoreDistribution value="BENIGN" recordCount="602"/>
+												<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+											</Node>
+											<Node score="BruteForce Attack" recordCount="1">
+												<True/>
+												<ScoreDistribution value="BENIGN" recordCount="0"/>
+												<ScoreDistribution value="BruteForce Attack" recordCount="1"/>
+											</Node>
+										</Node>
+										<Node score="BENIGN" recordCount="4023">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="4023"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<Node score="BruteForce Attack" recordCount="6">
+											<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="1.0"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="6"/>
+										</Node>
+										<Node score="BENIGN" recordCount="1">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="1"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="8.5"/>
+										<Node score="BENIGN" recordCount="9">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="9"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+										<Node score="BruteForce Attack" recordCount="2">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="2"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="61">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="61"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="12648">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="12648"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="156.0"/>
+									<Node score="BruteForce Attack" recordCount="4013">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="234.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="4013"/>
+									</Node>
+									<Node score="BENIGN" recordCount="8">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="8"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1281">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="1281"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="9">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="9"/>
+								</Node>
+								<Node score="BENIGN" recordCount="341">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="341"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="10781">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="10781"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="16.5"/>
+							<Node score="BENIGN" recordCount="41">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="621.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="41"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="784.0"/>
+								<Node score="BENIGN" recordCount="7">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="7"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="75062">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="75062"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="9">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="9"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="406">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="406"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+									<Node score="BENIGN" recordCount="53223">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="53223"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.0"/>
+										<Node score="BruteForce Attack" recordCount="3">
+											<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="3"/>
+										</Node>
+										<Node score="BENIGN" recordCount="6">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="6"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="8255">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="8255"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BENIGN" recordCount="33">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="7.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="33"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="7">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="414.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="7"/>
+									</Node>
+									<Node score="BENIGN" recordCount="7">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="7"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="167">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="167"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+								<Node score="BruteForce Attack" recordCount="3955">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="31.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3955"/>
+								</Node>
+								<Node score="BENIGN" recordCount="824">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="824"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12946">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="45.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="12946"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="13">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="25.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="13"/>
+							</Node>
+							<Node score="BENIGN" recordCount="2961">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="2961"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="402">
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="18.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="402"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75808">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75808"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="4685">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="4685"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="2">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="2"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="3989">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3989"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="54826">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="14.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="54826"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="4">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="4"/>
+							</Node>
+							<Node score="BENIGN" recordCount="19732">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="19732"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="456">
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="600.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="456"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="74916">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="74916"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="226.0"/>
+									<Node score="BENIGN" recordCount="4736">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="128.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="4736"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="178">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="4.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="178"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="9">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="9"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+									<Node score="BruteForce Attack" recordCount="3976">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="236.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3976"/>
+									</Node>
+									<Node score="BENIGN" recordCount="37">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="37"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="65">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="65"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="45359">
+								<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="45359"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="5">
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="25.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="5"/>
+							</Node>
+							<Node score="BENIGN" recordCount="28257">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="28257"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="14.0"/>
+								<Node score="BruteForce Attack" recordCount="7">
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="6.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="7"/>
+								</Node>
+								<Node score="BENIGN" recordCount="1">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75111">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75111"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="869">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="869"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node score="BENIGN" recordCount="62148">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="62148"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="136.0"/>
+									<Node score="BENIGN" recordCount="147">
+										<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="5.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="147"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="7">
+										<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="5.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="7"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="5">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="5"/>
+									</Node>
+									<Node score="BENIGN" recordCount="3">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="3"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="401">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="401"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<Node score="BENIGN" recordCount="78">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="78"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="4026">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="4026"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="15741">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="15741"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="119">
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="119"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75229">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75229"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="703">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="703"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="3">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="3"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BENIGN" recordCount="52597">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="52597"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+									<Node score="BruteForce Attack" recordCount="5">
+										<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="5"/>
+									</Node>
+									<Node score="BENIGN" recordCount="13">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="13"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="5538">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="5538"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="1.5"/>
+									<Node score="BruteForce Attack" recordCount="3944">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="18.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3944"/>
+									</Node>
+									<Node score="BENIGN" recordCount="1">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1101">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1101"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node score="BENIGN" recordCount="1093">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="570.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="1093"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="11">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="25.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="11"/>
+								</Node>
+								<Node score="BENIGN" recordCount="450">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="450"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="18004">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="18004"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="453">
+							<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="14.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="453"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75400">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75400"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="16.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.5"/>
+									<Node score="BENIGN" recordCount="5203">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="5203"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="6">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="6"/>
+									</Node>
+									<Node score="BENIGN" recordCount="58">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="58"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="56980">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="56980"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BENIGN" recordCount="62">
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="62"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="236.0"/>
+									<Node score="BruteForce Attack" recordCount="3965">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="4.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3965"/>
+									</Node>
+									<Node score="BENIGN" recordCount="2">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="2"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="9">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="9"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node score="BENIGN" recordCount="1156">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="568.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="1156"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="13">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="146.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="13"/>
+								</Node>
+								<Node score="BENIGN" recordCount="278">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="278"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="15174">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="15174"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="467">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="11.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="467"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75237">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75237"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="24.5"/>
+									<Node score="BENIGN" recordCount="5354">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="5354"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="112">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="112"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="7">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="7"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="60921">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="60921"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="234.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BruteForce Attack" recordCount="3923">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3923"/>
+									</Node>
+									<Node score="BENIGN" recordCount="20">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="20"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="418">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="418"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="106.0"/>
+									<Node score="BENIGN" recordCount="114">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="8.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="114"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="11">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="11"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1339">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1339"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="10660">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="10660"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="16.5"/>
+							<Node score="BENIGN" recordCount="42">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="42"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75304">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75304"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="385">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="385"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="5072">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="5072"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="3">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="14.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="3"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BENIGN" recordCount="1">
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="1.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="1"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="3950">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3950"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="61356">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="61356"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="17.5"/>
+								<Node score="BruteForce Attack" recordCount="3">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="63.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3"/>
+								</Node>
+								<Node score="BENIGN" recordCount="34">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="34"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12190">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12190"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="438">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="438"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75563">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75563"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BENIGN" recordCount="48352">
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="130.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="48352"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BENIGN" recordCount="313">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="188.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="313"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="12">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="12"/>
+									</Node>
+									<Node score="BENIGN" recordCount="338">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="338"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="9669">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="9669"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.0"/>
+								<Node score="BENIGN" recordCount="60">
+									<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="10.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="60"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="4003">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="4003"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="20196">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="20196"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node score="BENIGN" recordCount="13">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="13"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75224">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75224"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="430">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="430"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node score="BENIGN" recordCount="63332">
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="63332"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="156.0"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="59.0"/>
+										<Node score="BENIGN" recordCount="54">
+											<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="3.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="54"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+										<Node score="BENIGN" recordCount="21">
+											<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="12.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="21"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+										<Node score="BruteForce Attack" recordCount="10">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="10"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="82">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="82"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="2964">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="2964"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+								<Node>
+									<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BruteForce Attack" recordCount="3915">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="127.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3915"/>
+									</Node>
+									<Node score="BENIGN" recordCount="17">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="17"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="329">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="329"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node score="BENIGN" recordCount="1184">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="1184"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="16">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="146.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="16"/>
+								</Node>
+								<Node score="BENIGN" recordCount="121">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="121"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="10241">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="10241"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="796">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="796"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75528">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75528"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="646.0"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node score="BENIGN" recordCount="52368">
+									<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="5.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="52368"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+									<Node score="BENIGN" recordCount="48">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="13.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="48"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="8">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="8"/>
+									</Node>
+									<Node score="BENIGN" recordCount="11">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="11"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+									<Node score="BruteForce Attack" recordCount="2">
+										<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="43.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="2"/>
+									</Node>
+									<Node score="BENIGN" recordCount="82">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="82"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="13771">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="13771"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="25.5"/>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="9.0"/>
+									<Node score="BENIGN" recordCount="44">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="15.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="44"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="3836">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="3836"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="80">
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="17.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="80"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="12">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="12"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="11381">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="11381"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="1438">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="1438"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75529">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75529"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="646.0"/>
+							<Node>
+								<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="21.0"/>
+								<Node score="BENIGN" recordCount="5063">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="5063"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="3995">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="19.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3995"/>
+								</Node>
+								<Node score="BENIGN" recordCount="3">
+									<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="8.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="3"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node score="BruteForce Attack" recordCount="2">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="2"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="60135">
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="60135"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="7.5"/>
+								<Node score="BruteForce Attack" recordCount="3">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="56.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="3"/>
+								</Node>
+								<Node score="BENIGN" recordCount="97">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="97"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="12631">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="12631"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BruteForce Attack" recordCount="75226">
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="52.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="75226"/>
+						</Node>
+						<Node score="BENIGN" recordCount="1455">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="1455"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Packet Length Max)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+						<MiningField name="double(Total Fwd Packet)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="230.0"/>
+								<Node>
+									<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="210.0"/>
+									<Node score="BENIGN" recordCount="63030">
+										<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="190.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="63030"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="2.5"/>
+										<Node>
+											<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+											<Node score="BENIGN" recordCount="35">
+												<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="3.5"/>
+												<ScoreDistribution value="BENIGN" recordCount="35"/>
+												<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+											</Node>
+											<Node score="BruteForce Attack" recordCount="4">
+												<True/>
+												<ScoreDistribution value="BENIGN" recordCount="0"/>
+												<ScoreDistribution value="BruteForce Attack" recordCount="4"/>
+											</Node>
+										</Node>
+										<Node score="BENIGN" recordCount="40">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="40"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="1817">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="1817"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="27.5"/>
+									<Node>
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="3.5"/>
+										<Node score="BENIGN" recordCount="24">
+											<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="6.5"/>
+											<ScoreDistribution value="BENIGN" recordCount="24"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+										</Node>
+										<Node score="BruteForce Attack" recordCount="7">
+											<True/>
+											<ScoreDistribution value="BENIGN" recordCount="0"/>
+											<ScoreDistribution value="BruteForce Attack" recordCount="7"/>
+										</Node>
+									</Node>
+									<Node score="BENIGN" recordCount="46">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="46"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="1170">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="1170"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="234.0"/>
+								<Node score="BruteForce Attack" recordCount="4007">
+									<SimplePredicate field="double(Fwd Packet Length Max)" operator="lessOrEqual" value="55.5"/>
+									<ScoreDistribution value="BENIGN" recordCount="0"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="4007"/>
+								</Node>
+								<Node score="BENIGN" recordCount="505">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="505"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="0.5"/>
+								<Node score="BENIGN" recordCount="985">
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="390.0"/>
+									<ScoreDistribution value="BENIGN" recordCount="985"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="394.0"/>
+									<Node score="BENIGN" recordCount="13">
+										<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="44.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="13"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="2">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="13.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="2"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="15">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="15"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Total Fwd Packet)" operator="lessOrEqual" value="20.5"/>
+									<Node score="BENIGN" recordCount="57">
+										<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="14.5"/>
+										<ScoreDistribution value="BENIGN" recordCount="57"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BENIGN" recordCount="10">
+										<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="406.0"/>
+										<ScoreDistribution value="BENIGN" recordCount="10"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+									</Node>
+									<Node score="BruteForce Attack" recordCount="1">
+										<True/>
+										<ScoreDistribution value="BENIGN" recordCount="0"/>
+										<ScoreDistribution value="BruteForce Attack" recordCount="1"/>
+									</Node>
+								</Node>
+								<Node score="BENIGN" recordCount="567">
+									<True/>
+									<ScoreDistribution value="BENIGN" recordCount="567"/>
+									<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="BENIGN" recordCount="10493">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="10493"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="51.5"/>
+							<Node score="BENIGN" recordCount="1">
+								<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="1"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+							</Node>
+							<Node score="BruteForce Attack" recordCount="75351">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="BruteForce Attack" recordCount="75351"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="430">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="430"/>
+							<ScoreDistribution value="BruteForce Attack" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

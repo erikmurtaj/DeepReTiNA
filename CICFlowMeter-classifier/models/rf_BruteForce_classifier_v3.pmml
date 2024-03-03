@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.103.1"/>
+		<Timestamp>2024-02-25T18:06:40Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('classifier', RandomForestClassifier(max_depth=16, n_estimators=20))])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="y" optype="categorical" dataType="string">
+			<Value value="BENIGN"/>
+			<Value value="SSH-BruteForce"/>
+		</DataField>
+		<DataField name="Total Length of Fwd Packet" optype="continuous" dataType="float"/>
+		<DataField name="Fwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Bwd PSH Flags" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="Bwd Header Length" optype="continuous" dataType="float"/>
+		<DataField name="PSH Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="ACK Flag Count" optype="continuous" dataType="float"/>
+		<DataField name="FWD Init Win Bytes" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Act Data Pkts" optype="continuous" dataType="float"/>
+		<DataField name="Fwd Seg Size Min" optype="continuous" dataType="float"/>
+	</DataDictionary>
+	<MiningModel functionName="classification" algorithmName="sklearn.ensemble._forest.RandomForestClassifier">
+		<MiningSchema>
+			<MiningField name="y" usageType="target"/>
+			<MiningField name="PSH Flag Count"/>
+			<MiningField name="ACK Flag Count"/>
+			<MiningField name="Fwd PSH Flags"/>
+			<MiningField name="FWD Init Win Bytes"/>
+			<MiningField name="Fwd Seg Size Min"/>
+			<MiningField name="Bwd Header Length"/>
+			<MiningField name="Total Length of Fwd Packet"/>
+			<MiningField name="Bwd PSH Flags"/>
+			<MiningField name="Fwd Header Length"/>
+			<MiningField name="Fwd Act Data Pkts"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(BENIGN)" optype="continuous" dataType="double" feature="probability" value="BENIGN"/>
+			<OutputField name="probability(SSH-BruteForce)" optype="continuous" dataType="double" feature="probability" value="SSH-BruteForce"/>
+		</Output>
+		<LocalTransformations>
+			<DerivedField name="double(PSH Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="PSH Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(ACK Flag Count)" optype="continuous" dataType="double">
+				<FieldRef field="ACK Flag Count"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd PSH Flags"/>
+			</DerivedField>
+			<DerivedField name="double(FWD Init Win Bytes)" optype="continuous" dataType="double">
+				<FieldRef field="FWD Init Win Bytes"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Seg Size Min)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Seg Size Min"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(Total Length of Fwd Packet)" optype="continuous" dataType="double">
+				<FieldRef field="Total Length of Fwd Packet"/>
+			</DerivedField>
+			<DerivedField name="double(Bwd PSH Flags)" optype="continuous" dataType="double">
+				<FieldRef field="Bwd PSH Flags"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Header Length)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Header Length"/>
+			</DerivedField>
+			<DerivedField name="double(Fwd Act Data Pkts)" optype="continuous" dataType="double">
+				<FieldRef field="Fwd Act Data Pkts"/>
+			</DerivedField>
+		</LocalTransformations>
+		<Segmentation multipleModelMethod="average" missingPredictionTreatment="returnMissing">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74825">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74825"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="6">
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="14.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="6"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75421">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75421"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node score="BENIGN" recordCount="22">
+								<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="17537.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="22"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="1">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="1"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="540">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="540"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74888">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74888"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="424">
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="28.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="424"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75503">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75503"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75262">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="75262"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="432">
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="488.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="432"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75121">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75121"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Total Length of Fwd Packet)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75328">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="75328"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Length of Fwd Packet)" operator="lessOrEqual" value="2011.0"/>
+							<Node score="SSH-BruteForce" recordCount="74905">
+								<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="74905"/>
+							</Node>
+							<Node score="BENIGN" recordCount="76">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="76"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="501">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="501"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="5">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="5"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Total Length of Fwd Packet)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74699">
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="644.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74699"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Total Length of Fwd Packet)" operator="lessOrEqual" value="2044.0"/>
+							<Node score="SSH-BruteForce" recordCount="75075">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="61.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75075"/>
+							</Node>
+							<Node score="BENIGN" recordCount="314">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="314"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="727">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="727"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74766">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74766"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="461">
+							<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="23788.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="461"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75586">
+							<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="27732.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75586"/>
+						</Node>
+						<Node score="BENIGN" recordCount="2">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="2"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74886">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74886"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="410">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="20.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="410"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75519">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75519"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74455">
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="644.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74455"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="989">
+							<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="24076.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="989"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="35">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="35"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75336">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75336"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75101">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="75101"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="399">
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="10.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="399"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75315">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75315"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74204">
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="15.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74204"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="1231">
+							<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="24076.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="1231"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="24">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="24"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75356">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75356"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="11">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75204">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="75204"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="424">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="424"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75187">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75187"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="12">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74505">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74505"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="577">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="26.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="577"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75733">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75733"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="13">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74858">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="30.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74858"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="31.5"/>
+							<Node score="BENIGN" recordCount="22">
+								<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="17537.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="22"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75396">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75396"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="539">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="539"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="14">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74414">
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="644.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74414"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="788.0"/>
+							<Node score="SSH-BruteForce" recordCount="75345">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="54.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75345"/>
+							</Node>
+							<Node score="BENIGN" recordCount="81">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="81"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="975">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="975"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="15">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Header Length)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74998">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74998"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="432">
+							<SimplePredicate field="double(Fwd Header Length)" operator="lessOrEqual" value="456.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="432"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75385">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75385"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="16">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(FWD Init Win Bytes)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74719">
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74719"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="50.5"/>
+							<Node score="BENIGN" recordCount="113">
+								<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="17537.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="113"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75290">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75290"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="690">
+							<SimplePredicate field="double(FWD Init Win Bytes)" operator="lessOrEqual" value="23791.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="690"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="2">
+							<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="12.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="2"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="1">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="1"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="17">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(ACK Flag Count)"/>
+						<MiningField name="double(Fwd PSH Flags)"/>
+						<MiningField name="double(Bwd Header Length)"/>
+						<MiningField name="double(Bwd PSH Flags)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74541">
+							<SimplePredicate field="double(Bwd PSH Flags)" operator="lessOrEqual" value="14.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="74541"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Bwd Header Length)" operator="lessOrEqual" value="778.0"/>
+							<Node score="BENIGN" recordCount="207">
+								<SimplePredicate field="double(Fwd PSH Flags)" operator="lessOrEqual" value="15.5"/>
+								<ScoreDistribution value="BENIGN" recordCount="207"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+							<Node score="SSH-BruteForce" recordCount="75459">
+								<SimplePredicate field="double(ACK Flag Count)" operator="lessOrEqual" value="53.0"/>
+								<ScoreDistribution value="BENIGN" recordCount="0"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="75459"/>
+							</Node>
+							<Node score="BENIGN" recordCount="49">
+								<True/>
+								<ScoreDistribution value="BENIGN" recordCount="49"/>
+								<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="BENIGN" recordCount="559">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="559"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="18">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75383">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="75383"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="410">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="21.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="410"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75022">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75022"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="19">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(PSH Flag Count)"/>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="75100">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="75100"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="400">
+							<SimplePredicate field="double(PSH Flag Count)" operator="lessOrEqual" value="20.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="400"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75315">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75315"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="20">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction">
+					<MiningSchema>
+						<MiningField name="double(Fwd Seg Size Min)"/>
+						<MiningField name="double(Fwd Act Data Pkts)"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="BENIGN" recordCount="74936">
+							<SimplePredicate field="double(Fwd Seg Size Min)" operator="lessOrEqual" value="30.0"/>
+							<ScoreDistribution value="BENIGN" recordCount="74936"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="BENIGN" recordCount="419">
+							<SimplePredicate field="double(Fwd Act Data Pkts)" operator="lessOrEqual" value="10.5"/>
+							<ScoreDistribution value="BENIGN" recordCount="419"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="0"/>
+						</Node>
+						<Node score="SSH-BruteForce" recordCount="75460">
+							<True/>
+							<ScoreDistribution value="BENIGN" recordCount="0"/>
+							<ScoreDistribution value="SSH-BruteForce" recordCount="75460"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>
