@@ -10,11 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.dmg.pmml.PMML;
 import org.jnetpcap.packet.format.FormatUtils;
-import org.jpmml.evaluator.FieldValue;
-import org.jpmml.evaluator.ModelEvaluator;
-import org.jpmml.evaluator.ModelEvaluatorBuilder;
 
 import org.pmml4s.model.Model;
 
@@ -1097,10 +1093,17 @@ public class BasicFlow {
 			return "BENIGN";
 		}*/
 
-		Model model = model = Model.fromFile("models/rf_slowloris_classifier.pmml");
+		//Model model = Model.fromFile("models\rf_slowloris_classifier.pmml");
+		Model model = null;
+		try {
+			model = Model.fromFile("models/rf_ALL_attacks.pmml");
+			model.toString();
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
 		
-		
-		Map result = model.predict(new HashMap<String, Object>() {{
+		/*Map result = model.predict(new HashMap<String, Object>() {{
 			put("Bwd Pkt Len Max", getBwdPacketLengthMax());
 			put("Bwd Seg Size Avg", bAvgSegmentSize());
 			put("Bwd Pkt Len Mean", getBwdPacketLengthMean());
@@ -1111,7 +1114,7 @@ public class BasicFlow {
 			put("Fwd IAT Mean", getFlowIAT().getMean());
 			put("Pkt Len Var", getPacketLengthVariance());
 			put("FIN Flag Cnt", flagCounts.get("FIN").value);
-			put("Pkt Len Max", flowLengthStats.getMax());
+			put("Pkt Len Max", getMaxPacketLength());
 			put("Pkt Len Std", getPacketLengthStd());
 			put("Fwd Pkts/s", getfPktsPerSecond());
 			put("Fwd IAT Min", getFwdIATMin());
@@ -1122,11 +1125,121 @@ public class BasicFlow {
 			put("Bwd IAT Min", getBwdIATMin());
 			put("Fwd PSH Flags", getFwdPSHFlags());
 			put("Pkt Len Mean", getPacketLengthMean());
+        }});*/
+		
+
+		/*
+		['Bwd Packet Length Max', 'Bwd Packet Length Mean',
+	       'Bwd Packet Length Std', 'Fwd IAT Min', 'Bwd IAT Total',
+	       'Bwd Header Length', 'FIN Flag Count', 'CWR Flag Count',
+	       'Bwd Segment Size Avg', 'FWD Init Win Bytes', 'Bwd Init Win Bytes',
+	       'Fwd Seg Size Min'] */
+          
+		/*Map result = model.predict(new HashMap<String, Object>() {{
+			put("Bwd Packet Length Max", getBwdPacketLengthMax());
+			put("Bwd Packet Length Mean", getBwdPacketLengthMean());
+			put("Bwd Packet Length Std", getBwdPacketLengthStd());
+			put("Fwd IAT Min", getFwdIATMin());
+			put("Bwd IAT Total", getBwdIATTotal());
+			put("Bwd Header Length", getBwdHeaderLength());
+			put("FIN Flag Count", flagCounts.get("FIN").value);
+			put("CWR Flag Count", flagCounts.get("CWR").value);
+			put("Bwd Segment Size Avg", bAvgSegmentSize());
+			put("FWD Init Win Bytes", getInit_Win_bytes_forward());
+			put("Bwd Init Win Bytes", getInit_Win_bytes_backward());
+			put("Fwd Seg Size Min", getmin_seg_size_forward());
+        }});*/
+		
+		/***************** PORT SCAN ******************************/
+		
+		/*['Tot Len of Bwd Pkt', 'Fwd Pkt Len Max', 'Fwd Pkt Len Mean',    
+	       'Flow Bytes/s', 'Bwd Pkts/s', 'Pkt Len Max', 'Pkt Len Std',     
+	       'Fwd Segment Size Avg', 'Bwd Seg Size Avg', 'Subflow Fwd Bytes',
+	       'Fwd Seg Size Min']*/
+		
+		/*Map result = model.predict(new HashMap<String, Object>() {{
+			put("Tot Len of Bwd Pkt", getTotalLengthofBwdPackets());
+			put("Fwd Pkt Len Max", getFwdPacketLengthMax());
+			put("Fwd Pkt Len Mean", getFwdPacketLengthMean());
+			put("Flow Bytes/s", getFlowBytesPerSec());
+			put("Bwd Pkts/s", getbPktsPerSecond());
+			put("Pkt Len Max", getMaxPacketLength());
+			put("Pkt Len Std", getPacketLengthStd());
+			put("Fwd Segment Size Avg", fAvgSegmentSize());
+			put("Bwd Seg Size Avg", bAvgSegmentSize());
+			put("Subflow Fwd Bytes", getSflow_fbytes());
+			put("Fwd Seg Size Min", getmin_seg_size_forward());
+        }});*/
+		
+		/***************** BRUTEFORCE ******************************/
+		
+		/*'Total Fwd Packet', 'Fwd Packet Length Max', 'Fwd PSH Flags',
+	       'Bwd PSH Flags', 'Fwd Header Length', 'Bwd Header Length',   
+	       'PSH Flag Count', 'ACK Flag Count', 'Fwd Act Data Pkts',     
+	       'Fwd Seg Size Min'*/
+		
+		/*Map result = model.predict(new HashMap<String, Object>() {{
+			put("Total Fwd Packet", getTotalFwdPackets());
+			put("Fwd Pkt Len Max", getFwdPacketLengthMax());
+			put("Fwd PSH Flags", getFwdPSHFlags());
+			put("Bwd PSH Flags", getBwdPSHFlags());
+			put("Fwd Header Length", getFwdHeaderLength());
+			put("Bwd Header Length", getBwdHeaderLength());
+			put("PSH Flag Count", flagCounts.get("PSH").value);
+			put("ACK Flag Count", flagCounts.get("ACK").value);
+			put("Fwd Act Data Pkts", getAct_data_pkt_forward());
+			put("Fwd Seg Size Min", getmin_seg_size_forward());
+        }});*/
+		
+		/**************** ALL ATTACKS **************************/
+		
+		/*"FWD Init Win Bytes", "Packet Length Std", "Packet Length Mean", "Bwd Packet Length Std", "Bwd Packet Length Max", "Bwd PSH Flags", "ACK Flag Count", 
+		 * "Fwd Seg Size Min", "Fwd PSH Flags", "CWR Flag Count",
+		"Packet Length Variance", "Fwd Packet Length Max", "Bwd Packet Length Mean"*/
+		
+		
+		Map result = model.predict(new HashMap<String, Object>() {{
+			put("FWD Init Win Bytes", getInit_Win_bytes_forward());
+			put("Packet Length Std", getPacketLengthStd());
+			put("Packet Length Mean", getPacketLengthMean());
+			put("Bwd Packet Length Std", getBwdPacketLengthStd());
+			put("Bwd Packet Length Max", getBwdPacketLengthMax());
+			put("Bwd PSH Flags", getBwdPSHFlags());
+			put("ACK Flag Count", flagCounts.get("ACK").value);
+			put("Fwd Seg Size Min", getmin_seg_size_forward());
+			put("Fwd PSH Flags", getFwdPSHFlags());
+			put("CWR Flag Count", flagCounts.get("CWR").value);
+			put("Packet Length Variance", getPacketLengthVariance());
+			put("Fwd Packet Length Max", getFwdPacketLengthMax());
+			put("Bwd Packet Length Mean", getBwdPacketLengthMean());			
         }});
 		
-		System.out.println(result.toString());
+		
+		//System.out.println(flowId.toString() + "==>" + result.toString() + " FIN Flags: " + (flagCounts.get("FIN").value) + "CWR Flag Count: " + (flagCounts.get("CWR").value));
+		//System.out.println(flowId.toString() + "==>" + result.toString());
+		System.out.println(flowId.toString() + " ==> " + result.toString());
+		
+        /*String highestProbabilityKey = null;
+        double highestProbability = -1.0; // Assuming probabilities are between 0 and 1
+
+        for (Map.Entry<String, Object> entry : result.entrySet()) {
+            String key = entry.getKey();
+            if (key.startsWith("probability")) {
+                double probability = (double) entry.getValue();
+                if (probability > highestProbability) {
+                    highestProbability = probability;
+                    highestProbabilityKey = key;
+                }
+            }
+        }
+
+        if (highestProbabilityKey != null) {
+            System.out.println(highestProbabilityKey + " = " + highestProbability);
+        }*/
+
 		// 
         return result.toString();
+        //return highestProbabilityKey + " = " + highestProbability;
     }
 	
     public String dumpFlowBasedFeaturesEx() {
