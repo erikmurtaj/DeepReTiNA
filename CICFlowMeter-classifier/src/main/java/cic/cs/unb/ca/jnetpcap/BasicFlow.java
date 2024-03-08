@@ -1097,7 +1097,6 @@ public class BasicFlow {
 		Model model = null;
 		try {
 			model = Model.fromFile("models/rf_ALL_attacks.pmml");
-			model.toString();
 		} catch (Exception e) {
 			System.out.println(e);
 			e.printStackTrace();
@@ -1218,28 +1217,8 @@ public class BasicFlow {
 		//System.out.println(flowId.toString() + "==>" + result.toString() + " FIN Flags: " + (flagCounts.get("FIN").value) + "CWR Flag Count: " + (flagCounts.get("CWR").value));
 		//System.out.println(flowId.toString() + "==>" + result.toString());
 		System.out.println(flowId.toString() + " ==> " + result.toString());
-		
-        /*String highestProbabilityKey = null;
-        double highestProbability = -1.0; // Assuming probabilities are between 0 and 1
 
-        for (Map.Entry<String, Object> entry : result.entrySet()) {
-            String key = entry.getKey();
-            if (key.startsWith("probability")) {
-                double probability = (double) entry.getValue();
-                if (probability > highestProbability) {
-                    highestProbability = probability;
-                    highestProbabilityKey = key;
-                }
-            }
-        }
-
-        if (highestProbabilityKey != null) {
-            System.out.println(highestProbabilityKey + " = " + highestProbability);
-        }*/
-
-		// 
-        return result.toString();
-        //return highestProbabilityKey + " = " + highestProbability;
+        return result.toString().replace(",", "-");
     }
 	
     public String dumpFlowBasedFeaturesEx() {
