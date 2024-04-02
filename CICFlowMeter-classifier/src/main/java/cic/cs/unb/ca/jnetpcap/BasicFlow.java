@@ -1085,15 +1085,7 @@ public class BasicFlow {
 	}
 	
 	public String getLabel() {
-		//the original is "|". I think it should be "||" need to check,
-		/*if(FormatUtils.ip(src).equals("147.32.84.165") || FormatUtils.ip(dst).equals("147.32.84.165")){
-			return "BOTNET";													
-		}
-		else{
-			return "BENIGN";
-		}*/
 
-		//Model model = Model.fromFile("models\rf_slowloris_classifier.pmml");
 		Model model = null;
 		try {
 			model = Model.fromFile("models/rf_ALL_attacks.pmml");
@@ -1102,100 +1094,11 @@ public class BasicFlow {
 			e.printStackTrace();
 		}
 		
-		/*Map result = model.predict(new HashMap<String, Object>() {{
-			put("Bwd Pkt Len Max", getBwdPacketLengthMax());
-			put("Bwd Seg Size Avg", bAvgSegmentSize());
-			put("Bwd Pkt Len Mean", getBwdPacketLengthMean());
-			put("Flow IAT Std", getFlowIAT().getStandardDeviation());
-			put("Flow IAT Mean", getFlowIAT().getMean());
-			put("Flow IAT Max", getFlowIAT().getMax());
-			put("Fwd IAT Max", getFlowIAT().getMax());
-			put("Fwd IAT Mean", getFlowIAT().getMean());
-			put("Pkt Len Var", getPacketLengthVariance());
-			put("FIN Flag Cnt", flagCounts.get("FIN").value);
-			put("Pkt Len Max", getMaxPacketLength());
-			put("Pkt Len Std", getPacketLengthStd());
-			put("Fwd Pkts/s", getfPktsPerSecond());
-			put("Fwd IAT Min", getFwdIATMin());
-			put("Bwd IAT Tot", getBwdIATTotal());
-			put("Bwd IAT Mean", getBwdIATMean());
-			put("Bwd IAT Std", getBwdIATStd());
-			put("Bwd IAT Max", getBwdIATMax());
-			put("Bwd IAT Min", getBwdIATMin());
-			put("Fwd PSH Flags", getFwdPSHFlags());
-			put("Pkt Len Mean", getPacketLengthMean());
-        }});*/
-		
-
-		/*
-		['Bwd Packet Length Max', 'Bwd Packet Length Mean',
-	       'Bwd Packet Length Std', 'Fwd IAT Min', 'Bwd IAT Total',
-	       'Bwd Header Length', 'FIN Flag Count', 'CWR Flag Count',
-	       'Bwd Segment Size Avg', 'FWD Init Win Bytes', 'Bwd Init Win Bytes',
-	       'Fwd Seg Size Min'] */
-          
-		/*Map result = model.predict(new HashMap<String, Object>() {{
-			put("Bwd Packet Length Max", getBwdPacketLengthMax());
-			put("Bwd Packet Length Mean", getBwdPacketLengthMean());
-			put("Bwd Packet Length Std", getBwdPacketLengthStd());
-			put("Fwd IAT Min", getFwdIATMin());
-			put("Bwd IAT Total", getBwdIATTotal());
-			put("Bwd Header Length", getBwdHeaderLength());
-			put("FIN Flag Count", flagCounts.get("FIN").value);
-			put("CWR Flag Count", flagCounts.get("CWR").value);
-			put("Bwd Segment Size Avg", bAvgSegmentSize());
-			put("FWD Init Win Bytes", getInit_Win_bytes_forward());
-			put("Bwd Init Win Bytes", getInit_Win_bytes_backward());
-			put("Fwd Seg Size Min", getmin_seg_size_forward());
-        }});*/
-		
-		/***************** PORT SCAN ******************************/
-		
-		/*['Tot Len of Bwd Pkt', 'Fwd Pkt Len Max', 'Fwd Pkt Len Mean',    
-	       'Flow Bytes/s', 'Bwd Pkts/s', 'Pkt Len Max', 'Pkt Len Std',     
-	       'Fwd Segment Size Avg', 'Bwd Seg Size Avg', 'Subflow Fwd Bytes',
-	       'Fwd Seg Size Min']*/
-		
-		/*Map result = model.predict(new HashMap<String, Object>() {{
-			put("Tot Len of Bwd Pkt", getTotalLengthofBwdPackets());
-			put("Fwd Pkt Len Max", getFwdPacketLengthMax());
-			put("Fwd Pkt Len Mean", getFwdPacketLengthMean());
-			put("Flow Bytes/s", getFlowBytesPerSec());
-			put("Bwd Pkts/s", getbPktsPerSecond());
-			put("Pkt Len Max", getMaxPacketLength());
-			put("Pkt Len Std", getPacketLengthStd());
-			put("Fwd Segment Size Avg", fAvgSegmentSize());
-			put("Bwd Seg Size Avg", bAvgSegmentSize());
-			put("Subflow Fwd Bytes", getSflow_fbytes());
-			put("Fwd Seg Size Min", getmin_seg_size_forward());
-        }});*/
-		
-		/***************** BRUTEFORCE ******************************/
-		
-		/*'Total Fwd Packet', 'Fwd Packet Length Max', 'Fwd PSH Flags',
-	       'Bwd PSH Flags', 'Fwd Header Length', 'Bwd Header Length',   
-	       'PSH Flag Count', 'ACK Flag Count', 'Fwd Act Data Pkts',     
-	       'Fwd Seg Size Min'*/
-		
-		/*Map result = model.predict(new HashMap<String, Object>() {{
-			put("Total Fwd Packet", getTotalFwdPackets());
-			put("Fwd Pkt Len Max", getFwdPacketLengthMax());
-			put("Fwd PSH Flags", getFwdPSHFlags());
-			put("Bwd PSH Flags", getBwdPSHFlags());
-			put("Fwd Header Length", getFwdHeaderLength());
-			put("Bwd Header Length", getBwdHeaderLength());
-			put("PSH Flag Count", flagCounts.get("PSH").value);
-			put("ACK Flag Count", flagCounts.get("ACK").value);
-			put("Fwd Act Data Pkts", getAct_data_pkt_forward());
-			put("Fwd Seg Size Min", getmin_seg_size_forward());
-        }});*/
-		
-		/**************** ALL ATTACKS **************************/
+		/**************** ALL ATTACKS MODEL CLASSIFIER **************************/
 		
 		/*"FWD Init Win Bytes", "Packet Length Std", "Packet Length Mean", "Bwd Packet Length Std", "Bwd Packet Length Max", "Bwd PSH Flags", "ACK Flag Count", 
 		 * "Fwd Seg Size Min", "Fwd PSH Flags", "CWR Flag Count",
 		"Packet Length Variance", "Fwd Packet Length Max", "Bwd Packet Length Mean"*/
-		
 		
 		Map result = model.predict(new HashMap<String, Object>() {{
 			put("FWD Init Win Bytes", getInit_Win_bytes_forward());
@@ -1213,9 +1116,6 @@ public class BasicFlow {
 			put("Bwd Packet Length Mean", getBwdPacketLengthMean());			
         }});
 		
-		
-		//System.out.println(flowId.toString() + "==>" + result.toString() + " FIN Flags: " + (flagCounts.get("FIN").value) + "CWR Flag Count: " + (flagCounts.get("CWR").value));
-		//System.out.println(flowId.toString() + "==>" + result.toString());
 		System.out.println(flowId.toString() + " ==> " + result.toString());
 
         return result.toString().replace(",", "-");
