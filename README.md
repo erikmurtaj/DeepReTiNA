@@ -18,7 +18,7 @@ The modified version of the CICFlometer tool is developed in Java. Please make s
 Then clone this repository as follows:
 
 ```
-git clone https :// github . com / erikmurtaj / DeepReTiNA . git
+git clone https://github.com/erikmurtaj/DeepReTiNA.git
 ```
 
 #### Windows
@@ -28,13 +28,13 @@ Please make sure [WinCap](https://www.winpcap.org/install/default.htm) is instal
 #### Windows
 Move to the DeepReTiNA/CICFlowMeter-classifier/jnetpcap/win/jnetpcap-1.4.r1425 folder. Then run:
 ```
- mvn install : install - file - Dfile = jnetpcap . jar -DgroupId=org.jnetpcap -DartifactId=jnetpcap -Dversion=1.4.1 -Dpackaging=jar
+ mvn install:install -file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId=jnetpcap -Dversion=1.4.1 -Dpackaging=jar
 ```
 
 #### Linux
 Move to the DeepReTiNA/CICFlowMeter-classifier/jnetpcap/linux/jnetpcap-1.4.r1425 folder. Then run:
 ```
-sudo mvn install : install - file - Dfile = jnetpcap . jar -DgroupId=org.jnetpcap -DartifactId=jnetpcap -Dversion=1.4.1 -Dpackaging=jar
+sudo mvn install:install -file -Dfile=jnetpcap.jar -DgroupId=org.jnetpcap -DartifactId=jnetpcap -Dversion=1.4.1 -Dpackaging=jar
 ```
 
 ### 4. Tool Run
