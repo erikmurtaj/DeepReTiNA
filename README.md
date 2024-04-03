@@ -90,5 +90,8 @@ Instead for Windows run:
 $  gradlew distZip
 ```
 
+# Video Example of the Tool in action during a Bruteforce attack
+https://github.com/erikmurtaj/DeepReTiNA/blob/main/screenshots/GNS3_bruteforce_attack_test.mp4
+
 
 
