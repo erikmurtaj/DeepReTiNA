@@ -91,7 +91,9 @@ $  gradlew distZip
 ```
 
 # Video Example of the Tool in action during a Bruteforce attack
-https://github.com/erikmurtaj/DeepReTiNA/blob/main/screenshots/GNS3_bruteforce_attack_test.mp4
+https://github.com/erikmurtaj/DeepReTiNA/assets/50946517/4c644db1-4905-49aa-97ab-80f080ea85de
+
+
 
 
 
