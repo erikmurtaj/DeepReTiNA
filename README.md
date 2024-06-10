@@ -1,9 +1,9 @@
 # DeepReTiNA
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://github.com/erikmurtaj/DeepReTiNA/blob/main/LICENSE)
 [![Documentation](https://img.shields.io/badge/Documentation-github-brightgreen.svg?style=for-the-badge)](https://www.unb.ca/cic/datasets/ids-2018.html)
-[![Paper]([https://img.shields.io/badge/Documentation-github-brightgreen.svg?style=for-the-badge)](https://ital-ia2024.it/workshop/ai-per-cybersecurity#:~:text=Learning%20Approaches%20%5B-,PDF,-%5D%0AErik%20Murtaj)
+[![Paper](https://img.shields.io/badge/Paper-PDF-blue.svg?style=for-the-badge)](https://ital-ia2024.it/submission/582/paper)
 
-DeepReTiNA stands for Real-Time Anomaly Detection IDS with a Deep and comprehensive study on the CSE-CIC-IDS2018 Dataset. Click here to read the related paper.
+DeepReTiNA stands for Real-Time Anomaly Detection IDS with a Deep and comprehensive study on the CSE-CIC-IDS2018 Dataset. [Click here to read the related paper.](https://ital-ia2024.it/submission/582/paper)
 
 The main contribution is the creation of a classifier model that has been integrated in the CICFlowMeter tool, originally developed by A. H. Lashkari ([CICFlowmeter-V4.0](https://github.com/ahlashkari/CICFlowMeter)) to detect Real-Time cyber-attacks and act as a simple Intrusion Detection System (IDS).
 
